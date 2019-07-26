@@ -18,8 +18,6 @@ public class Reader {
 
     private DataInputStream dis;
 
-    private Parser parser;
-
     private ClassFile classFile;
 
     public Reader(String path) {
@@ -42,28 +40,27 @@ public class Reader {
         classFile = new ClassFile();
     }
 
+    public ClassFile readClassFile() {
+
+        readMagicInfo();
+
+        return classFile;
+    }
+
     public void readMagicInfo() {
 
         try {
             int magic = this.dis.readInt();
 
-
-
             System.out.println(Integer.toBinaryString(magic));
             int unit = (1 << 8) - 1;
             System.out.println(Integer.toBinaryString(unit));
-            int[] values = new int[4];
-
-            int tm = magic;
-            for(int i = 0; i < 4; i++) {
-                values[i] = unit & tm;
-                tm  = tm >>> 8;
-            }
-
+            int[] values = Parser.parseIntToBytes(magic);
             for(int i = 0; i < 4; i++) {
                 System.out.println(Integer.toHexString(values[i]));
             }
 
+            classFile.setMagic(magic);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Magic read failed!");

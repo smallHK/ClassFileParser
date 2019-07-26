@@ -8,16 +8,23 @@ import com.hk.entity.ClassFile;
  */
 public class Parser {
 
-    private ClassFile classFile;
-
 
     public boolean parser(byte[] origin) {
 
         return false;
     }
 
-
-    public ClassFile getClassFile() {
-        return this.classFile;
+    /**
+     * 将int解析为表示byte的int数组
+     */
+    public static int[] parseIntToBytes(int src){
+        int unit = (1 << 8) - 1;
+        int[] values = new int[4];
+        int tm = src;
+        for(int i = 0; i < 4; i++) {
+            values[i] = unit & tm;
+            tm  = tm >>> 8;
+        }
+        return values;
     }
 }
