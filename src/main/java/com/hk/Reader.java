@@ -43,6 +43,9 @@ public class Reader {
     public ClassFile readClassFile() {
 
         readMagicInfo();
+        readMinorVersion();
+        readMajorVersion();
+        readConstantPool();
 
         return classFile;
     }
@@ -68,12 +71,49 @@ public class Reader {
         }
     }
 
+    public void readMinorVersion() {
+        try {
+            int minorVersion = this.dis.readUnsignedShort();
+            classFile.setMinorVersion(minorVersion);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Minor Version read failed!");
+            System.exit(2);
+        }
+    }
+
+    public void readMajorVersion() {
+        try {
+            int majorVersion = this.dis.readUnsignedShort();
+            classFile.setMajorVersion(majorVersion);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Major Version read failed!");
+            System.exit(2);
+        }
+    }
+
+    public void readConstantPoolCount() {
+        try {
+            int constantPoolCount = this.dis.readUnsignedShort();
+            classFile.setConstant_pool_count(constantPoolCount);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Constant pool count read failed!");
+            System.exit(2);
+        }
+    }
+
     public void readConstantPool() {
 
         try {
-            int poolCount = dis.readInt();
+            int poolCount = classFile.getConstant_pool_count();
+
+            throw new IOException();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Constant pool read failed!");
+            System.exit(2);
         }
     }
 
