@@ -1,9 +1,14 @@
 package com.hk.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author smallHK
  * 2019/7/23 22:51
  */
+@Getter
+@Setter
 public class ClassFile {
 
     private int magic;
@@ -15,7 +20,23 @@ public class ClassFile {
     private int constant_pool_count;
 
     class ConstantPool {
+        int tag;
+        ConstantPool(int tag) {
+            this.tag = tag;
+        }
+    }
 
+    class ConstantMethodRefInfo extends ConstantPool{
+
+        int classIndex;
+
+        int nameAndTypeIndex;
+
+        ConstantMethodRefInfo(int tag, int classIndex, int nameAndTypeIndex) {
+            super(tag);
+            this.classIndex = classIndex;
+            this.nameAndTypeIndex = nameAndTypeIndex;
+        }
     }
 
     private ConstantPool[] constantPool;
@@ -54,8 +75,19 @@ public class ClassFile {
 
     class AttributeInfo {
 
+        int attributeNameIndex;
+
+        int attributeLength;
+
+        int[] info;
     }
 
     private AttributeInfo[] attributes;
 
+
+
+    public void addConstantMethodRefInfo(int tag, int classIndex, int nameAndTypeIndex) {
+
+        var info = new ConstantMethodRefInfo(tag, classIndex, nameAndTypeIndex);
+    }
 }
