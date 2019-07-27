@@ -1,6 +1,7 @@
 package com.hk;
 
 import com.hk.entity.ClassFile;
+import com.hk.entity.constant.ConstantPool;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -45,12 +46,13 @@ public class Reader {
         readMagicInfo();
         readMinorVersion();
         readMajorVersion();
+        readConstantPoolCount();
         readConstantPool();
 
         return classFile;
     }
 
-    public void readMagicInfo() {
+    private void readMagicInfo() {
 
         try {
             int magic = this.dis.readInt();
@@ -71,7 +73,7 @@ public class Reader {
         }
     }
 
-    public void readMinorVersion() {
+    private void readMinorVersion() {
         try {
             int minorVersion = this.dis.readUnsignedShort();
             classFile.setMinorVersion(minorVersion);
@@ -82,7 +84,7 @@ public class Reader {
         }
     }
 
-    public void readMajorVersion() {
+    private void readMajorVersion() {
         try {
             int majorVersion = this.dis.readUnsignedShort();
             classFile.setMajorVersion(majorVersion);
@@ -93,32 +95,145 @@ public class Reader {
         }
     }
 
-    public void readConstantPoolCount() {
+    private void readConstantPoolCount() {
+        int constantPoolCount = 0;
         try {
-            int constantPoolCount = this.dis.readUnsignedShort();
-            classFile.setConstant_pool_count(constantPoolCount);
+            constantPoolCount = this.dis.readUnsignedShort();
+        } catch (IOException e) {
+            System.out.println("Constant pool count read failed!");
+            System.exit(2);
+        }
+        classFile.setConstant_pool_count(constantPoolCount);
+    }
+
+    private void readConstantPool() {
+
+        int poolCount = classFile.getConstant_pool_count();
+        ConstantPool[] constantPools = new ConstantPool[poolCount];
+
+        for(int i = 0; i < poolCount; i++) {
+            ConstantPool constant = null;
+            try {
+                constant = ConstantPool.constructConstantPool(dis);
+                constant.readContent();
+            } catch (IOException e) {
+                System.out.println("Constant pool read failed!");
+                System.exit(2);
+            }
+            constantPools[i] = constant;
+        }
+
+        this.classFile.setConstantPool(constantPools);
+    }
+
+    private void readAccessFlags() {
+
+        try {
+            int accessFlags = this.dis.readUnsignedShort();
+            classFile.setAccessFlags(accessFlags);
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Constant pool count read failed!");
+            System.out.println("Access flags read failed!");
             System.exit(2);
         }
     }
 
-    public void readConstantPool() {
-
+    private void readThisClass() {
         try {
-            int poolCount = classFile.getConstant_pool_count();
+            int thisClass = this.dis.readUnsignedShort();
+            classFile.setThisClass(thisClass);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("This class read failed!");
+            System.exit(2);
+        }
+    }
+
+    private void readSuperClass() {
+        try {
+            int superClass = this.dis.readUnsignedShort();
+            classFile.setSuperClass(superClass);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Super class read failed!");
+            System.exit(2);
+        }
+    }
+
+    private void readInterfacesCount() {
+        try {
+            int interfacesCount = this.dis.readUnsignedShort();
+            classFile.setInterfacesCount(interfacesCount);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Interfaces count read failed!");
+            System.exit(2);
+        }
+    }
+
+    private void readInterfaces() {
+        try {
+            int interfacesCount = classFile.getInterfacesCount();
 
             throw new IOException();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Constant pool read failed!");
+            System.out.println("Interfaces info read failed!");
             System.exit(2);
         }
     }
 
 
-    public byte[] getOrigin() {
+    private void readFieldsCount() {
+        int fieldsCount = 0;
+        try {
+            fieldsCount = this.dis.readUnsignedShort();
+        } catch (IOException e) {
+            System.out.println("Fields count read failed!");
+            System.exit(2);
+        }
+        classFile.setFieldsCount(fieldsCount);
+    }
+
+    private void readFields() {
+
+    }
+
+
+    private void readMethodsCount() {
+        int methodsCount = 0;
+        try {
+            methodsCount = this.dis.readUnsignedShort();
+        } catch (IOException e) {
+            System.out.println("Methods count read failed!");
+            System.exit(2);
+        }
+        classFile.setFieldsCount(methodsCount);
+    }
+
+    private void readMethods() {
+
+    }
+
+
+    private void readAttributesCount() {
+        int attributesCount = 0;
+        try {
+            attributesCount = this.dis.readUnsignedShort();
+        } catch (IOException e) {
+            System.out.println("Attributes count read failed!");
+            System.exit(2);
+        }
+        classFile.setAttributesCount(attributesCount);
+    }
+
+    private void readAttributes() {
+
+    }
+
+
+
+    private byte[] getOrigin() {
         return this.origin;
     }
 
