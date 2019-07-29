@@ -2,3 +2,8 @@
 
 target/
 
+ClassFileParser.iml
+
+build/
+
+.gradle/
