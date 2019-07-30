@@ -24,4 +24,6 @@ public class ConstantUtf8Info extends ConstantPool {
             this.bytes[i] = dis.readUnsignedByte();
         }
     }
+
+    public int[] getBytes() { return this.bytes; }
 }

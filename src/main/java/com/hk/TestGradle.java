@@ -7,4 +7,6 @@ public class TestGradle {
 		System.out.println("Hello World!");
 		System.out.println(System.getProperty("user.dir"));
 	}
+
+
 }

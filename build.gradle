@@ -15,11 +15,12 @@ repositories {
 }
 
 dependencies {
-    compile 'junit:junit:4.12'
+   // compile 'junit:junit:4.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.6'
     compileOnly 'org.projectlombok:lombok:1.18.6'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.6'
     testCompileOnly 'org.projectlombok:lombok:1.18.6'
+    testImplementation 'junit:junit:4.12'
 }
 
 group = 'com.hk'
@@ -47,4 +48,8 @@ task runGradleTest(type: JavaExec) {
 task run(type: JavaExec) {
     main = 'com.hk.App'
     classpath = sourceSets.main.runtimeClasspath
+}
+
+test {
+    useJUnit();
 }

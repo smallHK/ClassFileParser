@@ -27,4 +27,17 @@ public class Parser {
         }
         return values;
     }
+
+    /**
+     * 将int[]转为byte[]
+     */
+    public static byte[] parseIntToBytes(int[] src) {
+        int len = src.length;
+        byte[] bytes = new byte[len];
+        for(int i = 0; i < len; i++) {
+            byte b = -1;
+            bytes[i] = (byte)(src[i] & b);
+        }
+        return bytes;
+    }
 }

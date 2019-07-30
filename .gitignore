@@ -1,9 +1,10 @@
 .idea/
+out/
+ClassFileParser.iml
 
 target/
 
-ClassFileParser.iml
 
 build/
-
 .gradle/
+

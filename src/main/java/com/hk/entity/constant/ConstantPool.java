@@ -1,5 +1,7 @@
 package com.hk.entity.constant;
 
+import com.hk.entity.ClassFile;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 

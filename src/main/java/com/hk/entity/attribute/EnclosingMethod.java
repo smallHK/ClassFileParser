@@ -4,6 +4,11 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 public class EnclosingMethod extends AttributeInfo {
+
+    public EnclosingMethod(int attributeNameIndex, int attributeLength) {
+        super(attributeNameIndex, attributeLength);
+    }
+
     @Override
     public void readContent(DataInputStream dis) throws IOException {
 

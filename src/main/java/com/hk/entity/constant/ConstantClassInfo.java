@@ -20,4 +20,7 @@ public class ConstantClassInfo extends ConstantPool {
     public void readContent(DataInputStream dis) throws IOException {
         this.nameIndex = dis.readUnsignedShort();
     }
+
+    public int getNameIndex() { return this.nameIndex; }
+
 }
