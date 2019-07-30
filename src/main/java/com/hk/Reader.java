@@ -48,6 +48,18 @@ public class Reader {
         readMajorVersion();
         readConstantPoolCount();
         readConstantPool();
+        readThisClass();
+        readSuperClass();
+        readInterfacesCount();
+
+
+//        readInterfaces();
+//        readFieldsCount();
+//        readFields();
+//        readMethodsCount();
+//        readMethods();
+//        readAttributesCount();
+//        readAttributes();
 
         return classFile;
     }
@@ -115,7 +127,7 @@ public class Reader {
             ConstantPool constant = null;
             try {
                 constant = ConstantPool.constructConstantPool(dis);
-                constant.readContent();
+                constant.readContent(dis);
             } catch (IOException e) {
                 System.out.println("Constant pool read failed!");
                 System.exit(2);
@@ -139,41 +151,43 @@ public class Reader {
     }
 
     private void readThisClass() {
+        int thisClass = 0;
         try {
-            int thisClass = this.dis.readUnsignedShort();
-            classFile.setThisClass(thisClass);
+            thisClass = this.dis.readUnsignedShort();
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println("This class read failed!");
             System.exit(2);
         }
+        classFile.setThisClass(thisClass);
     }
 
     private void readSuperClass() {
+        int superClass = 0;
         try {
-            int superClass = this.dis.readUnsignedShort();
-            classFile.setSuperClass(superClass);
+            superClass = this.dis.readUnsignedShort();
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println("Super class read failed!");
             System.exit(2);
         }
+        classFile.setSuperClass(superClass);
+
     }
 
     private void readInterfacesCount() {
+        int interfacesCount = 0;
         try {
-            int interfacesCount = this.dis.readUnsignedShort();
-            classFile.setInterfacesCount(interfacesCount);
+            interfacesCount = this.dis.readUnsignedShort();
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println("Interfaces count read failed!");
             System.exit(2);
         }
+        classFile.setInterfacesCount(interfacesCount);
+
     }
 
     private void readInterfaces() {
+        int interfacesCount = classFile.getInterfacesCount();
         try {
-            int interfacesCount = classFile.getInterfacesCount();
 
             throw new IOException();
         } catch (IOException e) {

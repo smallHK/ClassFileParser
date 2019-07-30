@@ -1,5 +1,8 @@
 package com.hk.entity.constant;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+
 /**
  * @author smallHK
  * 2019/7/27 23:03
@@ -14,8 +17,8 @@ public class ConstantLongInfo extends ConstantPool {
         super(tag);
     }
 
-    @Override
-    public void readContent() {
-
+    public void readContent(DataInputStream dis) throws IOException {
+        this.highBytes = dis.readInt();
+        this.lowBytes = dis.readInt();
     }
 }

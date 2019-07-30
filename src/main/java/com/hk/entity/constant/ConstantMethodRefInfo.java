@@ -3,6 +3,9 @@ package com.hk.entity.constant;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+
 /**
  * @author smallHK
  * 2019/7/27 17:57
@@ -19,14 +22,10 @@ class ConstantMethodRefInfo extends ConstantPool {
         super(tag);
     }
 
-    ConstantMethodRefInfo(int tag, int classIndex, int nameAndTypeIndex) {
-        super(tag);
-        this.classIndex = classIndex;
-        this.nameAndTypeIndex = nameAndTypeIndex;
+    public void readContent(DataInputStream dis) throws IOException {
+        this.classIndex = dis.readUnsignedShort();
+        this.nameAndTypeIndex = dis.readUnsignedShort();
     }
 
-    @Override
-    public void readContent() {
 
-    }
 }

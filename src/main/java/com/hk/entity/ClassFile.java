@@ -1,5 +1,6 @@
 package com.hk.entity;
 
+import com.hk.entity.attribute.AttributeInfo;
 import com.hk.entity.constant.ConstantPool;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,38 +31,17 @@ public class ClassFile {
 
     private int interfacesCount;
 
-    class Interface {
-
-    }
-
     private Interface[] interfaces;
 
     private int fieldsCount;
-
-    class FieldInfo {
-
-    }
 
     private FieldInfo[] fields;
 
     private int methodsCount;
 
-    class MethodInfo {
-
-    }
-
     private MethodInfo[] methods;
 
     private int attributesCount;
-
-    class AttributeInfo {
-
-        int attributeNameIndex;
-
-        int attributeLength;
-
-        int[] info;
-    }
 
     private AttributeInfo[] attributes;
 
