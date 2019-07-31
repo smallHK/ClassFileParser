@@ -1,7 +1,11 @@
 package com.hk.entity.constant;
 
+import com.hk.Parser;
+
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author smallHK
@@ -26,4 +30,11 @@ public class ConstantUtf8Info extends ConstantPool {
     }
 
     public int[] getBytes() { return this.bytes; }
+
+    @Override
+    public void print() {
+        ByteBuffer bf = ByteBuffer.wrap(Parser.parseIntToBytes(bytes));
+        String classname = StandardCharsets.UTF_8.decode(bf).toString();
+        System.out.println(classname);
+    }
 }

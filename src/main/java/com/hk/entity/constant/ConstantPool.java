@@ -35,12 +35,43 @@ public abstract class ConstantPool {
                 return new ConstantMethodRefInfo(tag);
             case 11:
                 return new ConstantInterfaceMethodRefInfo(tag);
+            case 8:
+                return new ConstantStringInfo(tag);
+            case 3:
+                return new ConstantIntegerInfo(tag);
+            case 4:
+                return new ConstantFloatInfo(tag);
+            case 5:
+                return new ConstantLongInfo(tag);
+            case 6:
+                return new ConstantDoubleInfo(tag);
+            case 12:
+                return new ConstantNameAndTypeInfo(tag);
+            case 1:
+                return new ConstantUtf8Info(tag);
+            case 15:
+                return new ConstantMethodHandleInfo(tag);
+            case 16:
+                return new ConstantMethodTypeInfo(tag);
+            case 17:
+                return new ConstantDynamicInfo(tag);
+            case 18:
+                return new ConstantInvokeDynamicInfo(tag);
+            case 19:
+                return new ConstantModuleInfo(tag);
+            case 20:
+                return new ConstantPackageInfo(tag);
 
         }
 
-        throw  new RuntimeException("No such type constant!");
+        throw  new RuntimeException("No such type constant! type: " + tag);
     }
 
     public abstract void readContent(DataInputStream dis) throws IOException;
+
+
+    public void print() {
+        System.out.println(this);
+    }
 
 }

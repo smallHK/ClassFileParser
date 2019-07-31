@@ -51,10 +51,8 @@ public class Reader {
         readThisClass();
         readSuperClass();
         readInterfacesCount();
-
-
-//        readInterfaces();
-//        readFieldsCount();
+        readInterfaces();
+        readFieldsCount();
 //        readFields();
 //        readMethodsCount();
 //        readMethods();
@@ -73,7 +71,7 @@ public class Reader {
             int unit = (1 << 8) - 1;
             System.out.println(Integer.toBinaryString(unit));
             int[] values = Parser.parseIntToBytes(magic);
-            for(int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++) {
                 System.out.println(Integer.toHexString(values[i]));
             }
 
@@ -120,17 +118,24 @@ public class Reader {
 
     private void readConstantPool() {
 
-        int poolCount = classFile.getConstant_pool_count();
+        int poolCount = classFile.getConstant_pool_count() - 1;
         ConstantPool[] constantPools = new ConstantPool[poolCount];
 
-        for(int i = 0; i < poolCount; i++) {
+        for (int i = 0; i < poolCount; i++) {
             ConstantPool constant = null;
             try {
+                if (i == 39) {
+                    int jjj = 1;
+                }
                 constant = ConstantPool.constructConstantPool(dis);
                 constant.readContent(dis);
+                constant.print();
             } catch (IOException e) {
                 System.out.println("Constant pool read failed!");
                 System.exit(2);
+            } catch (RuntimeException e) {
+                System.out.println("iterator: " + i);
+                System.exit(3);
             }
             constantPools[i] = constant;
         }
@@ -187,14 +192,18 @@ public class Reader {
 
     private void readInterfaces() {
         int interfacesCount = classFile.getInterfacesCount();
-        try {
-
-            throw new IOException();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Interfaces info read failed!");
-            System.exit(2);
+        int[] interfaces = new int[interfacesCount];
+        for (int i = 0; i < interfacesCount; i++) {
+            int index = -1;
+            try {
+                index = dis.readUnsignedShort();
+            } catch (IOException e) {
+                System.out.println("Interfaces info read failed!");
+                System.exit(2);
+            }
+            interfaces[i] = index;
         }
+        classFile.setInterfaces(interfaces);
     }
 
 
@@ -246,11 +255,9 @@ public class Reader {
     }
 
 
-
     private byte[] getOrigin() {
         return this.origin;
     }
-
 
 
 }

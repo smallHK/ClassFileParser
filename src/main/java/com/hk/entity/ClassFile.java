@@ -31,7 +31,7 @@ public class ClassFile {
 
     private int interfacesCount;
 
-    private Interface[] interfaces;
+    private int[] interfaces;
 
     private int fieldsCount;
 
