@@ -14,5 +14,4 @@ public class FieldInfo {
 
     private AttributeInfo[] attributeInfos;
 
-
 }

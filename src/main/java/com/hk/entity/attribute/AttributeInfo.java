@@ -17,5 +17,4 @@ public class AttributeInfo {
         this.info = info;
     }
 
-
 }
