@@ -38,7 +38,7 @@ public abstract class ConstantPool {
 
         }
 
-        throw  new RuntimeException("No such constant pool!");
+        throw  new RuntimeException("No such type constant!");
     }
 
     public abstract void readContent(DataInputStream dis) throws IOException;

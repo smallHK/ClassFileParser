@@ -14,7 +14,7 @@ public class TestClassFile {
     @Test
     public void testThisClass() {
 
-        Reader reader = new Reader("D:\\Cache\\javaPro\\201907\\23\\InvokeTest.class");
+        Reader reader = new Reader("D:\\JCache\\201907\\30\\Test.class");
         ClassFile file = reader.readClassFile();
         int thisClass = file.getThisClass();
         ConstantPool constantPool = file.getConstantPool()[thisClass];
