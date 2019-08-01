@@ -2,9 +2,12 @@ package com.hk;
 
 import com.hk.entity.ClassFile;
 import com.hk.entity.FieldInfo;
+import com.hk.entity.MethodInfo;
 import com.hk.entity.attribute.AttributeInfo;
 import com.hk.entity.constant.ConstantPool;
 
+import javax.print.DocFlavor;
+import javax.swing.*;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -45,6 +48,7 @@ public class Reader {
 
     public ClassFile readClassFile() {
 
+        System.out.println("Start parse!");
         readMagicInfo();
         readMinorVersion();
         readMajorVersion();
@@ -56,33 +60,24 @@ public class Reader {
         readInterfaces();
         readFieldsCount();
         readFields();
-//        readMethodsCount();
-//        readMethods();
-//        readAttributesCount();
-//        readAttributes();
-
+        readMethodsCount();
+        readMethods();
+        readAttributesCount();
+        readAttributes();
+        System.out.println("Finish parse!");
         return classFile;
     }
 
     private void readMagicInfo() {
-
+        int magic = 0;
         try {
-            int magic = this.dis.readInt();
-
-            System.out.println(Integer.toBinaryString(magic));
-            int unit = (1 << 8) - 1;
-            System.out.println(Integer.toBinaryString(unit));
-            int[] values = Parser.parseIntToBytes(magic);
-            for (int i = 0; i < 4; i++) {
-                System.out.println(Integer.toHexString(values[i]));
-            }
-
-            classFile.setMagic(magic);
+             magic = this.dis.readInt();
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println("Magic read failed!");
             System.exit(2);
         }
+        classFile.setMagic(magic);
+
     }
 
     private void readMinorVersion() {
@@ -90,7 +85,6 @@ public class Reader {
             int minorVersion = this.dis.readUnsignedShort();
             classFile.setMinorVersion(minorVersion);
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println("Minor Version read failed!");
             System.exit(2);
         }
@@ -224,22 +218,13 @@ public class Reader {
 
         int fieldsCount = this.classFile.getFieldsCount();
         FieldInfo[] fieldInfos = new FieldInfo[fieldsCount];
-        for(int i = 0; i < fieldsCount; i++) {
+        for (int i = 0; i < fieldsCount; i++) {
             try {
                 int accessFlags = dis.readUnsignedShort();
                 int nameIndex = dis.readUnsignedShort();
                 int descriptorIndex = dis.readUnsignedShort();
                 int attributesCount = dis.readUnsignedShort();//假设属性的数量一定小于20亿
-                AttributeInfo[] attributeInfos = new AttributeInfo[attributesCount];
-                for(int j = 0; j < attributesCount; j++) {
-                    int attributeNameIndex = dis.readUnsignedByte();
-                    int attributeLength = dis.readInt();//假设属性的长度小于20亿字节
-                    int[] info = new int[attributeLength];
-                    for(int t = 0; t < attributeLength; t++) {
-                        info[t] = dis.readUnsignedByte();
-                    }
-                    attributeInfos[j] = new AttributeInfo(attributeNameIndex, attributeLength,info);
-                }
+                AttributeInfo[] attributeInfos = readAttributes(dis, attributesCount);
                 fieldInfos[i] = new FieldInfo(accessFlags, nameIndex, descriptorIndex, attributesCount, attributeInfos);
             } catch (IOException e) {
                 System.out.println("Field read Fail!");
@@ -263,6 +248,37 @@ public class Reader {
 
     private void readMethods() {
 
+        int methodCount = this.classFile.getMethodsCount();
+        MethodInfo[] infos = new MethodInfo[methodCount];
+        for (int i = 0; i < methodCount; i++) {
+
+            try {
+                int accessFlags = this.dis.readUnsignedShort();
+                int nameIndex = this.dis.readUnsignedShort();
+                int descriptor = this.dis.readUnsignedShort();
+                int attributesCount = this.dis.readUnsignedShort();
+                AttributeInfo[] attributeInfos = readAttributes(dis, attributesCount);
+                infos[i] = new MethodInfo(accessFlags, nameIndex, descriptor, attributesCount, attributeInfos);
+            } catch (IOException e) {
+                System.out.println("method read fail!");
+                System.exit(2);
+            }
+        }
+        this.classFile.setMethods(infos);
+    }
+
+    private AttributeInfo[] readAttributes(DataInputStream dis, int attributesCount) throws IOException {
+        AttributeInfo[] attributeInfos = new AttributeInfo[attributesCount];
+        for (int j = 0; j < attributesCount; j++) {
+            int attributeNameIndex = dis.readUnsignedByte();
+            int attributeLength = dis.readInt();//假设属性的长度小于20亿字节
+            int[] info = new int[attributeLength];
+            for (int t = 0; t < attributeLength; t++) {
+                info[t] = dis.readUnsignedByte();
+            }
+            attributeInfos[j] = new AttributeInfo(attributeNameIndex, attributeLength, info);
+        }
+        return attributeInfos;
     }
 
 
@@ -278,7 +294,15 @@ public class Reader {
     }
 
     private void readAttributes() {
-
+        int count = this.classFile.getAttributesCount();
+        AttributeInfo[] attributes = null;
+        try {
+            attributes = readAttributes(dis, count);
+        } catch (IOException e) {
+            System.out.println("read attributes fail!");
+            System.exit(2);
+        }
+        this.classFile.setAttributes(attributes);
     }
 
 
