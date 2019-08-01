@@ -269,14 +269,15 @@ public class Reader {
 
     private AttributeInfo[] readAttributes(DataInputStream dis, int attributesCount) throws IOException {
         AttributeInfo[] attributeInfos = new AttributeInfo[attributesCount];
-        for (int j = 0; j < attributesCount; j++) {
-            int attributeNameIndex = dis.readUnsignedByte();
+        for (int i = 0; i < attributesCount; i++) {
+            int attributeNameIndex = dis.readUnsignedShort();
             int attributeLength = dis.readInt();//假设属性的长度小于20亿字节
+
             int[] info = new int[attributeLength];
             for (int t = 0; t < attributeLength; t++) {
                 info[t] = dis.readUnsignedByte();
             }
-            attributeInfos[j] = new AttributeInfo(attributeNameIndex, attributeLength, info);
+            attributeInfos[i] = new AttributeInfo(attributeNameIndex, attributeLength, info);
         }
         return attributeInfos;
     }
