@@ -1,6 +1,8 @@
 package com.hk;
 
 import com.hk.entity.ClassFile;
+import com.hk.entity.FieldInfo;
+import com.hk.entity.attribute.AttributeInfo;
 import com.hk.entity.constant.ConstantPool;
 
 import java.io.ByteArrayInputStream;
@@ -53,7 +55,7 @@ public class Reader {
         readInterfacesCount();
         readInterfaces();
         readFieldsCount();
-//        readFields();
+        readFields();
 //        readMethodsCount();
 //        readMethods();
 //        readAttributesCount();
@@ -220,6 +222,31 @@ public class Reader {
 
     private void readFields() {
 
+        int fieldsCount = this.classFile.getFieldsCount();
+        FieldInfo[] fieldInfos = new FieldInfo[fieldsCount];
+        for(int i = 0; i < fieldsCount; i++) {
+            try {
+                int accessFlags = dis.readUnsignedShort();
+                int nameIndex = dis.readUnsignedShort();
+                int descriptorIndex = dis.readUnsignedShort();
+                int attributesCount = dis.readUnsignedShort();//假设属性的数量一定小于20亿
+                AttributeInfo[] attributeInfos = new AttributeInfo[attributesCount];
+                for(int j = 0; j < attributesCount; j++) {
+                    int attributeNameIndex = dis.readUnsignedByte();
+                    int attributeLength = dis.readInt();//假设属性的长度小于20亿字节
+                    int[] info = new int[attributeLength];
+                    for(int t = 0; t < attributeLength; t++) {
+                        info[t] = dis.readUnsignedByte();
+                    }
+                    attributeInfos[j] = new AttributeInfo(attributeNameIndex, attributeLength,info);
+                }
+                fieldInfos[i] = new FieldInfo(accessFlags, nameIndex, descriptorIndex, attributesCount, attributeInfos);
+            } catch (IOException e) {
+                System.out.println("Field read Fail!");
+                System.exit(2);
+            }
+        }
+        this.classFile.setFields(fieldInfos);
     }
 
 
