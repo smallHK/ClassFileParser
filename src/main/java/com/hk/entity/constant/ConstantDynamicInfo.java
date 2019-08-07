@@ -9,6 +9,7 @@ import java.io.IOException;
  */
 public class ConstantDynamicInfo extends ConstantPool {
 
+
     private int bootstrapMethodAttrIndex;
 
     private int nameAndTypeIndex;
