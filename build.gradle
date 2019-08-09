@@ -26,7 +26,7 @@ dependencies {
 group = 'com.hk'
 version = '1.0-SNAPSHOT'
 description = 'ClassFileParser'
-//sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 publishing {
     publications {
